@@ -2,7 +2,7 @@ const Event = require('../Structures/Event');
 require('../database/Mongodb/mongodb');
 const db = require('../database/Mysql/mysql');
 const Guilds = require('../database/Mysql/Models/Guilds');
-
+const Tickets = require('../database/Mysql/Models/Ticket');
 module.exports = class extends Event {
 
 	constructor(...args) {
@@ -23,6 +23,8 @@ module.exports = class extends Event {
 			.then(() => {
 				console.log("Connected to MySQL database...");
 				Guilds.init(db);
+				Tickets.init(db);
+				Tickets.sync();
 				Guilds.sync();
 			}).catch(err => console.log(err));
 	}

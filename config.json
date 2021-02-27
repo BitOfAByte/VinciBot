@@ -1,0 +1,11 @@
+{
+  "token": "Nzk3NjIwMzI1NTQxNzQwNjA1.X_pH0A.Aa7DlaSQ3OtjmrtzisZIZheL8eM",
+  "prefix": "V!",
+  "owners": ["481913243493990400"],
+  "defaultPerms": ["SEND_MESSAGES"],
+  "mysql": {
+    "name": "vinci",
+    "username": "Nemijah",
+    "password": "Azizaetl8."
+  }
+}
