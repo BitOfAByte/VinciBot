@@ -1,6 +1,6 @@
 const Command = require('../../Structures/Command');
 const { MessageEmbed } = require('discord.js');
-const Ticket = require('../../database/Mysql/Models/Ticket');
+const TicketConfig = require('../../database/Mysql/Models/Ticket');
 
 module.exports = class Ticket extends Command{
     constructor(...args) {
@@ -36,7 +36,7 @@ module.exports = class Ticket extends Command{
                     allow: ['VIEW_CHANNEL', 'CONNECT', 'SPEAK', 'STREAM']
                 }
             ]
-        }).then(async  channel => {
+        }).then(async channel => {
             const embed = new MessageEmbed()
                 .setTimestamp()
                 .setTitle("**VINCI SUPPORT**")
@@ -44,6 +44,7 @@ module.exports = class Ticket extends Command{
                 .addFields(
                     { name: "Submitter: ", value: message.author.username, inline: true},
                     { name: "Submitter id", value: message.author.id, inline: true},
+                    { name: "Channel id", value: channel.id, inline: true},
                     { name: "Topic", value: `${topic}`, inline: false}
                 )
                 .setThumbnail(message.author.displayAvatarURL({ dynamic: true, size: 512, format: "png" }))
@@ -51,6 +52,18 @@ module.exports = class Ticket extends Command{
             const msg = await channel.send(embed);
             msg.react("📌");
             msg.react("🔒");
+
+            console.log(channel.id);
+            const ticket = await TicketConfig.create({
+                guildId: guild.id,
+                ticketAuthor: message.author.tag,
+                channelId: channel.id,
+                resolved: false,
+                messageId: msg.id
+            });
+
+            const ticketId = String(ticket.getDataValue('ticketId')).padStart(4,0);
+            await channel.edit({ name: `${ticketId}` })
         })
     }
 

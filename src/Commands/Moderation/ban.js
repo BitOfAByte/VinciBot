@@ -1,6 +1,6 @@
 const Command = require('../../Structures/Command');
-const banConfig = require('../../database/Mongodb/models/banConfig');
-const { MessageEmbed, MessageAttachment } = require('discord.js');
+const banConfig = require('../../database/Mysql/Models/Bans');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = class ban extends Command {
     constructor(...args) {
@@ -15,7 +15,7 @@ module.exports = class ban extends Command {
     async run(message, args) {
         const member = message.mentions.users.first();
         const reason = args.slice(1).join(" ");
-        const guild = this.client.guilds.cache.get('797204659730907287');
+        const guild = message.guild;
         if(member.length <  1) return message.reply("You must provide a guild member")
 
         if(!reason) return message.reply("You must provide a reason to ban!")
@@ -33,18 +33,17 @@ module.exports = class ban extends Command {
 
 
         const bans = new banConfig({
-            User: member.user.username,
-            UserID: member.id,
-            UserTag: member.user.discriminator,
-            Reason: reason,
-            Duration: "Perm", 
-            Active: true,
-            Moderator: message.author.username,
-            ModeratorTag: message.author.discriminator,
-            ModeratorID: message.author.id,
+            guildId: guild.id,
+            banId: 21332,
+            duration: "Perm",
+            moderator: message.audio.tag,
+            moderatorId: message.author.id,
+            member: member.user.tag,
+            memberId: member.id,
+            reason: reason,
+            active: true
         });
 
-        bans.save();
 
         const embed = new MessageEmbed()
             .setTitle("**VinciMC**")

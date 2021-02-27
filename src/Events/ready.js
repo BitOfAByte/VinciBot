@@ -1,8 +1,6 @@
 const Event = require('../Structures/Event');
 require('../database/Mongodb/mongodb');
-const db = require('../database/Mysql/mysql');
-const Guilds = require('../database/Mysql/Models/Guilds');
-const Tickets = require('../database/Mysql/Models/Ticket');
+
 module.exports = class extends Event {
 
 	constructor(...args) {
