@@ -1,8 +1,8 @@
 const Command = require('../../Structures/Command');
-const { MessageEmbed } = require('discord.js');
-const TicketConfig = require('../../database/Mysql/Models/Ticket');
+const {MessageEmbed} = require('discord.js');
+const TicketConfig = require('../../database/Mongodb/models/TicketConfig');
 
-module.exports = class Ticket extends Command{
+module.exports = class Ticket extends Command {
     constructor(...args) {
         super(...args, {
             name: "ticket",
@@ -12,14 +12,20 @@ module.exports = class Ticket extends Command{
             description: "creates a new channel"
         });
     }
+
     async run(message, args) {
         const guild = message.guild;
         const topic = args.slice().join(" ");
 
-        message.delete({ timeout: 3000 });
-        if(!topic) return message.reply("You need to type a topic...").then(m => m.delete({ timeout: 3000 }))
+        message.delete({timeout: 3000});
+        if (!topic) return message.reply("You need to type a topic...").then(m => m.delete({timeout: 3000}))
 
-        await guild.channels.create(`Ticket-${message.author.tag}`, {
+        const data = TicketConfig.findOne({
+            guildId: guild.id
+        });
+        const id = data.ticketId +=1;
+
+        await guild.channels.create(`ticket-${message.author.discriminator}`, {
             type: 'text',
             parent: '797229594717192244',
             topic: `${topic}`,
@@ -40,31 +46,28 @@ module.exports = class Ticket extends Command{
             const embed = new MessageEmbed()
                 .setTimestamp()
                 .setTitle("**VINCI SUPPORT**")
-                .setDescription(`Hello ${message.author.tag}, Your ticket has been created. Please wait until a supporter or staff responds `)
+                .setDescription(`Your ticket has been created, how can we help?`)
                 .addFields(
-                    { name: "Submitter: ", value: message.author.username, inline: true},
-                    { name: "Submitter id", value: message.author.id, inline: true},
-                    { name: "Channel id", value: channel.id, inline: true},
-                    { name: "Topic", value: `${topic}`, inline: false}
+                    {name: "Submitter: ", value: message.author.username, inline: true},
+                    {name: "Submitter id", value: message.author.id, inline: true},
+                    {name: "Channel id", value: channel.id, inline: true},
+                    {name: "Topic", value: `${topic}`, inline: false}
                 )
-                .setThumbnail(message.author.displayAvatarURL({ dynamic: true, size: 512, format: "png" }))
+                .setThumbnail(message.author.displayAvatarURL({dynamic: true, size: 512, format: "png"}))
                 .setFooter(`©️ ${guild.name}`, guild.iconURL())
             const msg = await channel.send(embed);
             msg.react("📌");
             msg.react("🔒");
 
-            console.log(channel.id);
-            const ticket = await TicketConfig.create({
+            const ticket = new TicketConfig({
                 guildId: guild.id,
-                ticketAuthor: message.author.tag,
+                messageId: msg.id,
                 channelId: channel.id,
                 resolved: false,
-                messageId: msg.id
+                ticketAuthor: message.author.tag,
+                ticketAuthorId: message.author.id,
             });
-
-            const ticketId = String(ticket.getDataValue('ticketId')).padStart(4,0);
-            await channel.edit({ name: `${ticketId}` })
+            await  ticket.save();
         })
     }
-
 }

@@ -1,5 +1,5 @@
 const Command = require('../../Structures/Command');
-const banConfig = require('../../database/Mysql/Models/Bans');
+
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class ban extends Command {

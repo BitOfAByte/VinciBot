@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
-
+const mongoose = require('mongoose')
 
 mongoose.connect('mongodb+srv://root:Hyg57aff@vinci.ujdc9.mongodb.net/Vinci', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useFindAndModify: false
 });
 
 mongoose.connection.on('open', () => console.log('Connected to the Mongoose Database.'));
