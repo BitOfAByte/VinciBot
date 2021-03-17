@@ -32,7 +32,7 @@
     "discord-giveaways": "^4.4.3",
     "discord-xp": "^1.1.7",
     "discord.js": "^12.5.1",
-    "erela.js": "^2.3.1",
+    "erela.js": "^2.3.2",
     "express": "^4.17.1",
     "figlet": "^1.5.0",
     "glob": "^7.1.6",
@@ -58,6 +58,8 @@
     "timestring": "^6.0.0",
     "trev": "^2.0.8",
     "util": "^0.12.3",
-    "vultrex.haste": "^1.0.1"
+    "vultrex.haste": "^1.0.1",
+    "yt-search": "^2.7.3",
+    "ytdl-core-discord": "^1.2.5"
   }
 }
